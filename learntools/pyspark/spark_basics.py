@@ -3,8 +3,7 @@ import csv
 import os
 from pyspark.sql import SparkSession
 
-# Set Java 17 for Spark (compatible with PySpark)
-os.environ['JAVA_HOME'] = '/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home'
+
 
 ## we create a spark session which is entrypoint with session name,master to use all the cores of cpu.
 spark = SparkSession.builder\
