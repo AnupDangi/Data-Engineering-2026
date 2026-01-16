@@ -50,114 +50,114 @@ clean_df = df.filter(
     df["Time_taken (min)"].isNotNull()
 )
 
-## nothing is expensive only narrow transformation
+# nothing is expensive only narrow transformation
 
 
-# ## first expensive operation
-# ## but how??
-# ## when we use groupBy causes shuffle operation across the cluster
-# ## think you are grouping city data but from different partitions
-# ## spark need to move data across the cluster to group them together
-# ## this is expensive operation
-# city_avg=(
-#     clean_df.groupBy("City")
-#     .avg("Time_taken (min)")
-# )
+## first expensive operation
+## but how??
+## when we use groupBy causes shuffle operation across the cluster
+## think you are grouping city data but from different partitions
+## spark need to move data across the cluster to group them together
+## this is expensive operation
+city_avg=(
+    clean_df.groupBy("City")
+    .avg("Time_taken (min)")
+)
 
-# ## lets check the execution plan
-# ## explain method shows how the query will be executed
-# ## shows logical plan which is aggregate in this case
-# ## shows physical plan which is shuffle hash aggregate
-# ## shows the stages of execution
-# ## before running any shuffle operation we can see the plan so that we dont write bad query
-# city_avg.explain(True)
+## lets check the execution plan
+## explain method shows how the query will be executed
+## shows logical plan which is aggregate in this case
+## shows physical plan which is shuffle hash aggregate
+## shows the stages of execution
+## before running any shuffle operation we can see the plan so that we dont write bad query
+city_avg.explain(True)
 
-# ## here we trigger the action means the operation of city_avg is executed 
-# ## Steps of execution : 
-# ## spark created shuffle files
-# ## network + disk involved
-# ## stage boundary created
-# ## this is expensive operation you paid task laamo
-# city_avg.show()
-
-
-# clean_df.groupBy("City").count().orderBy("count", ascending=False).show()
-
-# ## Second Expensive operation
-# ## huge numbers of unique users
-# ## 
-# person_avg = (
-#     clean_df
-#     .groupBy("Delivery_person_ID")
-#     .avg("Time_taken (min)")
-# )
-
-# person_avg.explain(True)
+## here we trigger the action means the operation of city_avg is executed 
+## Steps of execution : 
+## spark created shuffle files
+## network + disk involved
+## stage boundary created
+## this is expensive operation you paid task laamo
+city_avg.show()
 
 
-# person_avg.count()
+clean_df.groupBy("City").count().orderBy("count", ascending=False).show()
 
-# ## observe partitions (silent performance killer)
-# get_no_partitions=clean_df.rdd.getNumPartitions()
+## Second Expensive operation
+## huge numbers of unique users
+## 
+person_avg = (
+    clean_df
+    .groupBy("Delivery_person_ID")
+    .avg("Time_taken (min)")
+)
 
-# print(f"Number of partitions: {get_no_partitions}") ## here you get 2 
-
-# ## here you get 200 partitions remeber the partitions is created during shuffle operations on that dataframe
-# ## we can set partitions per dataframe during shuffle operations
-
-# ## here i got 1 during exection 
-
-# ## we got to know Key point
-# """"
-#     AQE (Adaptive Query Execution)
-#     - dynamically coalesce shuffle partitions based on data size
-#     - avoids small tasks
-#     - improves performance
-# """
-
-# print(f"city_avg partitions: {city_avg.rdd.getNumPartitions()}") 
+person_avg.explain(True)
 
 
-# ## now set right-size of partitions (manually based on requirement or data size)
+person_avg.count()
 
-# spark.conf.set("spark.sql.shuffle.partitions", "8")
+## observe partitions (silent performance killer)
+get_no_partitions=clean_df.rdd.getNumPartitions()
 
+print(f"Number of partitions: {get_no_partitions}") ## here you get 2 
 
-# city_avg_fixed = (
-#     clean_df
-#     .groupBy("City")
-#     .avg("Time_taken (min)")
-# )
+## here you get 200 partitions remeber the partitions is created during shuffle operations on that dataframe
+## we can set partitions per dataframe during shuffle operations
 
-# city_avg_fixed.explain()
-# city_avg_fixed.show()
+## here i got 1 during exection 
 
-# ## here i got 1 during exection as per data size if your data is huge during execution it will create more partitions but not max than set value
-# print(f"city_avg_fixed partitions: {city_avg_fixed.rdd.getNumPartitions()}")
+## we got to know Key point
+""""
+    AQE (Adaptive Query Execution)
+    - dynamically coalesce shuffle partitions based on data size
+    - avoids small tasks
+    - improves performance
+"""
 
-
-# ## Cache with intent 
-# ## we reuse clean_df multiple times
-
-# ## without cache every time it will recompute the dataframe from scratch
-# clean_df.cache()
-# print(f"Clean count: {clean_df.count()}")  ## action to materialize the cache
+print(f"city_avg partitions: {city_avg.rdd.getNumPartitions()}") 
 
 
-# ## if you ever need to optimize the output use parquet format but what it does??
-# ## parquet is columnar storage format
-# ## it is used for faster read and write operations it is compressed ,schema-aware,and industry-standard
-# ## check the folder it created sql files and data files which is used for faster read and write operations
-# (
-#     city_avg_fixed
-#     .write
-#     .mode("overwrite")
-#     .parquet("output/city_delivery_metrics")
-# )
+## now set right-size of partitions (manually based on requirement or data size)
 
-## phase 2: join-induced shuffles
-## why spark jobs "randomly" OOM
-## how broadcast joins actually work
+spark.conf.set("spark.sql.shuffle.partitions", "8")
+
+
+city_avg_fixed = (
+    clean_df
+    .groupBy("City")
+    .avg("Time_taken (min)")
+)
+
+city_avg_fixed.explain()
+city_avg_fixed.show()
+
+## here i got 1 during exection as per data size if your data is huge during execution it will create more partitions but not max than set value
+print(f"city_avg_fixed partitions: {city_avg_fixed.rdd.getNumPartitions()}")
+
+
+## Cache with intent 
+## we reuse clean_df multiple times
+
+## without cache every time it will recompute the dataframe from scratch
+clean_df.cache()
+print(f"Clean count: {clean_df.count()}")  ## action to materialize the cache
+
+
+## if you ever need to optimize the output use parquet format but what it does??
+## parquet is columnar storage format
+## it is used for faster read and write operations it is compressed ,schema-aware,and industry-standard
+## check the folder it created sql files and data files which is used for faster read and write operations
+(
+    city_avg_fixed
+    .write
+    .mode("overwrite")
+    .parquet("output/city_delivery_metrics")
+)
+
+# phase 2: join-induced shuffles
+# why spark jobs "randomly" OOM
+# how broadcast joins actually work
 
 print("-----------------------------Phase2 spark jobs--------------")
     
