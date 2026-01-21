@@ -1,3 +1,4 @@
 pyspark
 kagglehub
 confluent-kafka
+apache-airflow

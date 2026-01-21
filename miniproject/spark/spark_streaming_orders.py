@@ -57,7 +57,7 @@ bronze = raw_stream.select(
 )
 
 ## bronze data lake write stream we require checkpointing for fault tolerance
-## this bronze data can be kept to any storrage system like S3,ADLS,HDFS,Local FS etc
+## this bronze data can be kept to any storage system like S3,ADLS,HDFS,Local FS etc
 bronze_query = bronze.writeStream \
     .format("json") \
     .option("path", "./data_lake/bronze/zomato_orders") \
@@ -65,8 +65,9 @@ bronze_query = bronze.writeStream \
     .outputMode("append") \
     .start()
 
-print("✅ Spark Streaming Started - Reading from Kafka topic: zomato_orders")
-print("✅ Writing Bronze layer to: ./data_lake/bronze/zomato_orders")
+
+print("Spark Streaming Started - Reading from Kafka topic: zomato_orders")
+print(" Writing Bronze layer to: ./data_lake/bronze/zomato_orders")
 
 # Keep the streaming query running
 try:
