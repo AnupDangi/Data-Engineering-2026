@@ -163,7 +163,7 @@ _This shows how tasks can branch and converge based on conditions - a real workf
 fetch_user = PythonOperator(
     task_id='fetch_user',
     python_callable=fetch_user_function
-)
+)  
 ```
 
 **Task Dependencies Visual**:
