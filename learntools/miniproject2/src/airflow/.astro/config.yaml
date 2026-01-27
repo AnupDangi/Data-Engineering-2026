@@ -1,0 +1,7 @@
+project:
+    name: airflow
+
+docker:
+  volumes:
+    - /Users/anupdangi/Desktop/AnupAI/projects/2026/FlowGuard/learntools/miniproject2/src/data/data_storage:/opt/airflow/data_lake
+ 

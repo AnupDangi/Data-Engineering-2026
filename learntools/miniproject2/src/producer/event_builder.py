@@ -1,3 +1,10 @@
+"""
+Event Builder
+------------
+Transforms raw CSV rows into structured events with proper timestamps.
+Handles various time format edge cases from real-world data.
+"""
+
 from datetime import datetime, timedelta
 from typing import Dict
 
@@ -49,14 +56,33 @@ def parse_event_time(order_date: str, order_time: str) -> str:
 
 
 def build_event(row: Dict[str, str]) -> Dict:
+    """
+    Build structured event from raw CSV row.
+    
+    Event Schema:
+    - event_id: Unique identifier (used for idempotency)
+    - event_time: When event occurred (parsed from order date/time)
+    - ingestion_time: When event was ingested (UTC)
+    - payload: Complete raw data for bronze layer
+    
+    Args:
+        row: Dictionary from CSV row
+        
+    Returns:
+        Dict: Structured event ready for bronze storage
+    """
+    ingestion_time = datetime.utcnow()
     event_time = parse_event_time(
         row["Order_Date"],
         row["Time_Orderd"]
     )
 
+    # Generate unique event_id using CSV ID + ingestion timestamp to handle replays
+    unique_event_id = f"{row['ID']}_{ingestion_time.strftime('%Y%m%d%H%M%S%f')}"
+
     return {
-        "event_id": row["ID"],
+        "event_id": unique_event_id,
         "event_time": event_time,
-        "ingestion_time": datetime.utcnow().isoformat(),
+        "ingestion_time": ingestion_time.isoformat(),
         "payload": row
     }

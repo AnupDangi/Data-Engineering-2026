@@ -1,0 +1,10 @@
+# Astro Runtime includes the following pre-installed providers packages: https://www.astronomer.io/docs/astro/runtime-image-architecture#provider-packages
+
+# Apache Spark provider for @task.pyspark decorator
+apache-airflow-providers-apache-spark>=5.0.0
+
+# Spark for local ETL processing
+pyspark==3.5.0
+
+# Additional data processing
+pandas==2.1.4

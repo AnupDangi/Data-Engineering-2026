@@ -1,0 +1,7 @@
+# Custom compose file for Astro - ONLY volumes
+# This extends the auto-generated compose, adding data lake mount
+
+services:
+  scheduler:
+    volumes:
+      - /Users/anupdangi/Desktop/AnupAI/projects/2026/FlowGuard/learntools/miniproject2/src/data/data_storage:/opt/airflow/data_lake:rw
