@@ -1,11 +1,31 @@
-pandas 
-numpy 
-fastapi
-uvicorn[standard]
-pydantic
-pydantic-settings
-python-dotenv
-confluent-kafka 
-faker
-click  
+# Core Web Framework
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+pydantic==2.5.3
+pydantic-settings==2.1.0
+
+# Kafka Client
+confluent-kafka==2.3.0
+
+# Configuration & Environment
+python-dotenv==1.0.0
+pyyaml==6.0.1
+
+# Data Generation & Testing
+faker==22.6.0
+
+# CLI Tools
+click==8.1.7
+
+# Data Processing (for future use)
+pandas==2.2.0
+numpy==1.26.3
+
+# Logging & Monitoring
+colorlog==6.8.0
+
+# Development Tools
+pytest==7.4.4
+pytest-asyncio==0.23.3
+httpx==0.26.0  
 pyyaml
