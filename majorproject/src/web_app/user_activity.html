@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+        <h1> User Activity </h1>
+        <!--- I dont know mgiht change to react later for dyamic views and easy showcase of demo-->
+        <p> This page tracks user activity on the web application.</p>
+
+        <form action="/orders" method="post">
+            <label for="food">Food:</label>
+            <select name="food" id="food">
+                <option value="biryani">Biryani</option>
+                <option value="pizza">Pizza</option>
+            </select>
+            <input type="submit" value="Submit">
+        </form>
+
+        <!---- Here we will show the user ads based on their foods and suggestions --> 
+        
+</body>
+<script>
+    // JavaScript to track user activity
+    document.addEventListener('DOMContentLoaded', (event) => {
+        console.log('User activity tracking initialized.');
+        
+        // Example: Track form submissions
+        const form = document.querySelector('form');
+        form.addEventListener('submit', (e) => {
+            const selectedFood = document.getElementById('food').value;
+            console.log(`User submitted food: ${selectedFood}`);
+            // Here you can send this data to the server for further processing
+        });
+    });
+</script>
+</html>

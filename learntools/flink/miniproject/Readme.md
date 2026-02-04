@@ -119,6 +119,7 @@ State enables temporal pattern detection (e.g., "5 orders in last minute").
 - **Indexed Schema**: Fast queries by user, type, severity, timestamp
 
 **Schema:**
+
 ```sql
 CREATE TABLE fraud_alerts (
     id INTEGER PRIMARY KEY,

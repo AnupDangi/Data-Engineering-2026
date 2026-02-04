@@ -1,0 +1,1 @@
+Only for major project the venv folder is recreated so we dont create any conlict
