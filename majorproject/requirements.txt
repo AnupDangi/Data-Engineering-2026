@@ -1,3 +1,11 @@
-fastapi
 pandas 
 numpy 
+fastapi
+uvicorn[standard]
+pydantic
+pydantic-settings
+python-dotenv
+confluent-kafka 
+faker
+click  
+pyyaml

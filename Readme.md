@@ -85,7 +85,7 @@ End-to-end ETL pipeline simulating Zomato delivery analytics - streaming ingesti
 
 ---
 
-### 6. Apache Flink 🚧 IN PROGRESS
+### 6. Apache Flink 
 
 **Location:** `learntools/flink/`
 
