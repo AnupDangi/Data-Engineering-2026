@@ -5,24 +5,6 @@
 
 const EVENTS_GATEWAY_URL = 'http://localhost:8000';
 
-interface OrderEventPayload {
-  event_id: string;
-  user_id: number;
-  order_id: string;
-  item_id: number;
-  item_name: string;
-  price: number;
-  timestamp: string;
-}
-
-interface ClickEventPayload {
-  event_id: string;
-  user_id: number;
-  ad_id: string;
-  is_click: boolean;
-  timestamp: string;
-}
-
 // Generate session-based user ID
 export function getUserId(): string {
   // Check if running in browser (not SSR)
@@ -50,30 +32,26 @@ function getNumericUserId(): number {
   return Math.abs(hash);
 }
 
-// Generate event ID
-function generateEventId(): string {
-  return `evt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-}
-
-// Generate order ID
-function generateOrderId(): string {
-  return `order_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-}
-
-// Send order event
-export async function trackOrderEvent(itemId: number, itemName: string, price: number): Promise<boolean> {
+// Send order event - returns orderId for navigation
+export async function trackOrderEvent(
+  itemId: number, 
+  itemName: string, 
+  price: number,
+  itemCategory: string = '',
+  itemDescription: string = '',
+  itemImageUrl: string = ''
+): Promise<{ orderId: string; success: boolean }> {
   try {
-    const payload: OrderEventPayload = {
-      event_id: generateEventId(),
+    // Server generates order_id and event_id - no client-side generation
+    const payload = {
       user_id: getNumericUserId(),
-      order_id: generateOrderId(),
       item_id: itemId,
       item_name: itemName,
       price: price,
       timestamp: new Date().toISOString(),
     };
 
-    const response = await fetch(`${EVENTS_GATEWAY_URL}/api/v1/orders`, {
+    const response = await fetch(`${EVENTS_GATEWAY_URL}/api/v1/orders/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
@@ -81,29 +59,48 @@ export async function trackOrderEvent(itemId: number, itemName: string, price: n
 
     if (!response.ok) {
       console.error('Failed to track order:', await response.text());
-      return false;
+      return { orderId: '', success: false };
     }
 
-    console.log('✅ Order event tracked:', payload);
-    return true;
+    const result = await response.json();
+    const orderId = result.order_id;  // Server-generated UUID
+    
+    console.log('✅ Order placed:', result);
+    
+    // Store order details in localStorage for order page
+    if (typeof window !== 'undefined') {
+      const orderDetails = {
+        order_id: orderId,
+        food_id: itemId,
+        name: itemName,
+        category: itemCategory,
+        price: price,
+        description: itemDescription,
+        image_url: itemImageUrl,
+        user_id: getUserId(),
+        timestamp: payload.timestamp
+      };
+      localStorage.setItem(`order_${orderId}`, JSON.stringify(orderDetails));
+    }
+    
+    return { orderId, success: true };
   } catch (error) {
     console.error('Error tracking order:', error);
-    return false;
+    return { orderId: '', success: false };
   }
 }
 
 // Send click event
 export async function trackClickEvent(adId: string, isClick: boolean): Promise<boolean> {
   try {
-    const payload: ClickEventPayload = {
-      event_id: generateEventId(),
+    const payload = {
       user_id: getNumericUserId(),
       ad_id: adId,
       is_click: isClick,
       timestamp: new Date().toISOString(),
     };
 
-    const response = await fetch(`${EVENTS_GATEWAY_URL}/api/v1/clicks`, {
+    const response = await fetch(`${EVENTS_GATEWAY_URL}/api/v1/clicks/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
