@@ -1,18 +1,21 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import { trackOrderEvent, getUserId } from "@/lib/eventTracker";
+import { useRouter } from "next/navigation";
+import { trackOrderEvent, trackClickEvent, getUserId } from "@/lib/eventTracker";
 
 interface FoodItem {
   food_id: number;
   name: string;
   category: string;
   price: number;
+  description?: string;
   image_url: string;
   is_available: boolean;
 }
 
 export default function Home() {
+  const router = useRouter();
   const [foods, setFoods] = useState<FoodItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -56,15 +59,35 @@ export default function Home() {
     fetchFoods(category || undefined);
   };
 
-  const handleOrderClick = async (food: FoodItem) => {
-    // Send order event to Events Gateway (port 8000)
-    const success = await trackOrderEvent(food.food_id, food.name, food.price);
+  const handleOrderClick = async (food: FoodItem, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card click from firing
+    
+    // Send order event to Events Gateway and navigate to order page
+    const { orderId, success } = await trackOrderEvent(
+      food.food_id, 
+      food.name, 
+      food.price,
+      food.category,
+      food.description || '',
+      food.image_url
+    );
     
     if (success) {
-      alert(`✅ Order placed for ${food.name}!\n\nEvent sent to Kafka → Snowflake pipeline`);
+      router.push(`/order/${orderId}`);
     } else {
-      alert(`⚠️ Order placed for ${food.name} (event tracking failed)`);
+      alert('Failed to place order. Please try again.');
     }
+  };
+
+  const handleFoodImpression = (food: FoodItem) => {
+    // Track food item impression (view)
+    trackClickEvent(`food_${food.food_id}`, false);
+  };
+
+  const handleFoodClick = (food: FoodItem) => {
+    // Track food item click and navigate to detail page
+    trackClickEvent(`food_${food.food_id}`, true);
+    router.push(`/food/${food.food_id}`);
   };
 
   return (
@@ -134,7 +157,9 @@ export default function Home() {
               {foods.map(food => (
                 <div 
                   key={food.food_id} 
-                  className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all overflow-hidden group"
+                  className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all overflow-hidden group cursor-pointer"
+                  onClick={() => handleFoodClick(food)}
+                  onMouseEnter={() => handleFoodImpression(food)}
                 >
                   <div className="relative h-48 bg-gray-100">
                     <img
@@ -166,7 +191,7 @@ export default function Home() {
                     </div>
                     
                     <button
-                      onClick={() => handleOrderClick(food)}
+                      onClick={(e) => handleOrderClick(food, e)}
                       disabled={!food.is_available}
                       className={`w-full py-2 rounded-lg font-semibold transition ${
                         food.is_available
