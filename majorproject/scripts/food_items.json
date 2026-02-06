@@ -1,0 +1,202 @@
+[
+  {
+    "food_id": 1,
+    "name": "Chicken Biryani",
+    "category": "Biryani",
+    "price": 299,
+    "image_url": "https://images.pexels.com/photos/1624487/pexels-photo-1624487.jpeg",
+    "is_available": true
+  },
+  {
+    "food_id": 2,
+    "name": "Mutton Biryani",
+    "category": "Biryani",
+    "price": 349,
+    "image_url": "https://images.pexels.com/photos/9646843/pexels-photo-9646843.jpeg",
+    "is_available": true
+  },
+  {
+    "food_id": 3,
+    "name": "Veg Biryani",
+    "category": "Biryani",
+    "price": 249,
+    "image_url": "https://images.pexels.com/photos/7353380/pexels-photo-7353380.jpeg",
+    "is_available": true
+  },
+  {
+    "food_id": 4,
+    "name": "Margherita Pizza",
+    "category": "Pizza",
+    "price": 399,
+    "image_url": "https://images.pexels.com/photos/10496207/pexels-photo-10496207.jpeg",
+    "is_available": true
+  },
+  {
+    "food_id": 5,
+    "name": "Pepperoni Pizza",
+    "category": "Pizza",
+    "price": 499,
+    "image_url": "https://images.pexels.com/photos/825661/pexels-photo-825661.jpeg",
+    "is_available": true
+  },
+  {
+    "food_id": 6,
+    "name": "Farmhouse Pizza",
+    "category": "Pizza",
+    "price": 459,
+    "image_url": "https://images.pexels.com/photos/1146760/pexels-photo-1146760.jpeg",
+    "is_available": true
+  },
+  {
+    "food_id": 7,
+    "name": "Classic Veg Burger",
+    "category": "Burger",
+    "price": 179,
+    "image_url": "https://images.pexels.com/photos/1639557/pexels-photo-1639557.jpeg",
+    "is_available": true
+  },
+  {
+    "food_id": 8,
+    "name": "Chicken Cheese Burger",
+    "category": "Burger",
+    "price": 229,
+    "image_url": "https://images.pexels.com/photos/1108117/pexels-photo-1108117.jpeg",
+    "is_available": true
+  },
+  {
+    "food_id": 9,
+    "name": "Double Patty Burger",
+    "category": "Burger",
+    "price": 279,
+    "image_url": "https://images.pexels.com/photos/1633578/pexels-photo-1633578.jpeg",
+    "is_available": true
+  },
+  {
+    "food_id": 10,
+    "name": "Masala Dosa",
+    "category": "South Indian",
+    "price": 149,
+    "image_url": "https://images.pexels.com/photos/5560763/pexels-photo-5560763.jpeg",
+    "is_available": true
+  },
+  {
+    "food_id": 11,
+    "name": "Idli Sambar",
+    "category": "South Indian",
+    "price": 119,
+    "image_url": "https://images.pexels.com/photos/4331491/pexels-photo-4331491.jpeg",
+    "is_available": true
+  },
+  {
+    "food_id": 12,
+    "name": "Vada Sambar",
+    "category": "South Indian",
+    "price": 129,
+    "image_url": "https://images.pexels.com/photos/636230/pexels-photo-636230.jpeg",
+    "is_available": true
+  },
+  {
+    "food_id": 13,
+    "name": "Butter Chicken",
+    "category": "North Indian",
+    "price": 329,
+    "image_url": "https://images.pexels.com/photos/7625056/pexels-photo-7625056.jpeg",
+    "is_available": true
+  },
+  {
+    "food_id": 14,
+    "name": "Paneer Butter Masala",
+    "category": "North Indian",
+    "price": 289,
+    "image_url": "https://images.pexels.com/photos/12419161/pexels-photo-12419161.jpeg",
+    "is_available": true
+  },
+  {
+    "food_id": 15,
+    "name": "Dal Tadka",
+    "category": "North Indian",
+    "price": 199,
+    "image_url": "https://images.pexels.com/photos/6210875/pexels-photo-6210875.jpeg",
+    "is_available": true
+  },
+  {
+    "food_id": 16,
+    "name": "White Sauce Pasta",
+    "category": "Pasta",
+    "price": 269,
+    "image_url": "https://images.pexels.com/photos/1437267/pexels-photo-1437267.jpeg",
+    "is_available": true
+  },
+  {
+    "food_id": 17,
+    "name": "Red Sauce Pasta",
+    "category": "Pasta",
+    "price": 249,
+    "image_url": "https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg",
+    "is_available": true
+  },
+  {
+    "food_id": 18,
+    "name": "Chicken Alfredo Pasta",
+    "category": "Pasta",
+    "price": 319,
+    "image_url": "https://images.pexels.com/photos/803964/pexels-photo-803964.jpeg",
+    "is_available": true
+  },
+  {
+    "food_id": 19,
+    "name": "French Fries",
+    "category": "Snacks",
+    "price": 129,
+    "image_url": "https://images.pexels.com/photos/1583884/pexels-photo-1583884.jpeg",
+    "is_available": true
+  },
+  {
+    "food_id": 20,
+    "name": "Chicken Nuggets",
+    "category": "Snacks",
+    "price": 199,
+    "image_url": "https://images.pexels.com/photos/6061611/pexels-photo-6061611.jpeg",
+    "is_available": true
+  },
+  {
+    "food_id": 21,
+    "name": "Veg Spring Rolls",
+    "category": "Snacks",
+    "price": 179,
+    "image_url": "https://images.pexels.com/photos/4114631/pexels-photo-4114631.jpeg",
+    "is_available": true
+  },
+  {
+    "food_id": 22,
+    "name": "Chocolate Brownie",
+    "category": "Desserts",
+    "price": 149,
+    "image_url": "https://images.pexels.com/photos/45202/brownie-dessert-cake-sweet-45202.jpeg",
+    "is_available": true
+  },
+  {
+    "food_id": 23,
+    "name": "Vanilla Ice Cream",
+    "category": "Desserts",
+    "price": 99,
+    "image_url": "https://images.pexels.com/photos/1352243/pexels-photo-1352243.jpeg",
+    "is_available": true
+  },
+  {
+    "food_id": 24,
+    "name": "Gulab Jamun",
+    "category": "Desserts",
+    "price": 119,
+    "image_url": "https://images.pexels.com/photos/12331526/pexels-photo-12331526.jpeg",
+    "is_available": true
+  },
+  {
+    "food_id": 25,
+    "name": "Cold Coffee",
+    "category": "Beverages",
+    "price": 159,
+    "image_url": "https://images.pexels.com/photos/2615323/pexels-photo-2615323.jpeg",
+    "is_available": true
+  }
+]
