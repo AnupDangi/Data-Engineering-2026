@@ -12,6 +12,7 @@ class FoodItem(BaseModel):
     name: str = Field(..., description="Food name")
     category: str = Field(..., description="Food category (e.g., Biryani, Pizza)")
     price: float = Field(..., description="Price in INR", ge=0)
+    description: Optional[str] = Field(None, description="Detailed food description")
     image_url: str = Field(..., description="Image URL")
     is_available: bool = Field(default=True, description="Availability status")
     created_at: Optional[datetime] = Field(None, description="Creation timestamp")

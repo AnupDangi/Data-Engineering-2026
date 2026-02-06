@@ -57,8 +57,8 @@ async def load_initial_data():
             
             # Insert into database
             insert_query = """
-                INSERT INTO foods (food_id, name, category, price, image_url, is_available)
-                VALUES (%s, %s, %s, %s, %s, %s)
+                INSERT INTO foods (food_id, name, category, price, description, image_url, is_available)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
             """
             
             for item in food_items:
@@ -67,6 +67,7 @@ async def load_initial_data():
                     item["name"],
                     item["category"],
                     item["price"],
+                    item.get("description"),
                     item["image_url"],
                     item.get("is_available", True)
                 ))
