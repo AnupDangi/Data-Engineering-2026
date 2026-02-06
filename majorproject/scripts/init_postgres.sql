@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS foods (
     name VARCHAR(255) NOT NULL,
     category VARCHAR(100) NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
+    description TEXT,
     image_url TEXT NOT NULL,
     is_available BOOLEAN DEFAULT true,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
