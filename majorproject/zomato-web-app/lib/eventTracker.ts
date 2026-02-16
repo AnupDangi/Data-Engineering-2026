@@ -93,10 +93,16 @@ export async function trackOrderEvent(
 // Send click event
 export async function trackClickEvent(adId: string, isClick: boolean): Promise<boolean> {
   try {
+    // Extract food_id from adId like "food_5" -> 5
+    const itemId = adId.startsWith('food_') ? parseInt(adId.split('_')[1]) : null;
+    
     const payload = {
       user_id: getNumericUserId(),
       ad_id: adId,
+      item_id: itemId,  // ✅ Now includes actual food item ID
+      session_id: getUserId(),  // ✅ Use user session ID
       is_click: isClick,
+      event_type: isClick ? 'click' : 'impression',
       timestamp: new Date().toISOString(),
     };
 

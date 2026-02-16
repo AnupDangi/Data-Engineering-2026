@@ -27,16 +27,21 @@ def init_connection_pool():
     global connection_pool
     
     if connection_pool is None:
-        connection_pool = psycopg2.pool.SimpleConnectionPool(
-            2,  # Min connections
-            10,  # Max connections
-            host=DatabaseConfig.HOST,
-            port=DatabaseConfig.PORT,
-            database=DatabaseConfig.DATABASE,
-            user=DatabaseConfig.USER,
-            password=DatabaseConfig.PASSWORD
-        )
-        print(f"✅ Database connection pool initialized (Events Gateway)")
+        try:
+            connection_pool = psycopg2.pool.SimpleConnectionPool(
+                2,  # Min connections
+                10,  # Max connections
+                host=DatabaseConfig.HOST,
+                port=DatabaseConfig.PORT,
+                database=DatabaseConfig.DATABASE,
+                user=DatabaseConfig.USER,
+                password=DatabaseConfig.PASSWORD
+            )
+            print(f"✅ Database connection pool initialized (Events Gateway)")
+        except Exception as e:
+            print(f"❌ Failed to initialize database connection pool: {e}")
+            print(f"⚠️  Events Gateway will start but database operations will fail")
+            # Don't raise - allow service to start even if DB is down
 
 
 def close_connection_pool():
@@ -52,6 +57,9 @@ def close_connection_pool():
 @contextmanager
 def get_db_connection():
     """Get database connection from pool."""
+    if connection_pool is None:
+        raise RuntimeError("Database connection pool not initialized. PostgreSQL may be down.")
+    
     conn = connection_pool.getconn()
     try:
         yield conn
