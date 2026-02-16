@@ -1,0 +1,12 @@
+# Astro Runtime includes the following pre-installed providers packages: https://www.astronomer.io/docs/astro/runtime-image-architecture#provider-packages
+
+# Python packages for Spark ETL
+pyspark==3.4.1
+snowflake-connector-python==3.7.0
+snowflake-snowpark-python==1.11.1
+
+# PostgreSQL connector for enrichment
+psycopg2-binary==2.9.9
+
+# Utilities
+python-dotenv==1.0.0
