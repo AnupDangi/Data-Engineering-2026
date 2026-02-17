@@ -1,5 +1,8 @@
 # Astro Runtime includes the following pre-installed providers packages: https://www.astronomer.io/docs/astro/runtime-image-architecture#provider-packages
 
+# Airflow providers
+apache-airflow-providers-apache-spark==4.4.0
+
 # Python packages for Spark ETL
 pyspark==3.4.1
 snowflake-connector-python==3.7.0
