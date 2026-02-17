@@ -3,16 +3,19 @@
 ## ✅ What's Been Implemented
 
 ### 1. **Snowflake Schema Layers**
+
 - ✅ BRONZE: Raw events (already working)
 - ✅ SILVER: Cleaned, validated data (just created)
 - ✅ GOLD: Business metrics (just created)
 
 ### 2. **PySpark ETL Jobs**
+
 - ✅ Bronze → Silver (data cleaning)
 - ✅ Silver → Gold (metric aggregation)
 - ✅ 6 Spark jobs covering all transformations
 
 ### 3. **Airflow Orchestration**
+
 - ✅ Astronomer project setup
 - ✅ Daily ETL DAG with scheduling
 - ✅ Data quality validation
@@ -29,7 +32,8 @@ cd majorproject/scripts
 ./init_silver_gold_schemas.sh
 ```
 
-**Result:** 
+**Result:**
+
 - ✅ Created SILVER.ORDERS_CLEAN
 - ✅ Created SILVER.CLICKS_CLEAN
 - ✅ Created 5 GOLD metric tables
@@ -64,6 +68,7 @@ python silver_to_gold_funnel.py "2026-02-16"
 ```
 
 **What this does:**
+
 - Reads from BRONZE layer
 - Cleans and validates data
 - Writes to SILVER layer
@@ -101,6 +106,7 @@ astro dev run dags trigger flowguard_daily_etl
 ```
 
 **What this does:**
+
 - Runs all 6 Spark jobs in sequence
 - Bronze → Silver (orders + clicks in parallel)
 - Validates Silver data
@@ -165,6 +171,7 @@ SELECT * FROM USER_FUNNEL_METRICS ORDER BY DATE DESC;
 ## 📝 Next Steps
 
 ### 1. **Backfill Historical Data**
+
 ```bash
 # Process all historical dates
 cd airflow
@@ -174,17 +181,20 @@ astro dev run dags backfill flowguard_daily_etl \
 ```
 
 ### 2. **Schedule Daily Runs**
+
 - Already configured to run daily at 1:00 AM UTC
 - Will automatically process previous day's data
 - No manual intervention needed
 
 ### 3. **Add More Metrics (Future)**
+
 - User retention cohorts
 - Hourly order patterns
 - Geographic analysis
 - A/B test metrics
 
 ### 4. **Build Dashboard (Next Phase)**
+
 - Connect Tableau/PowerBI to GOLD layer
 - Pre-aggregated metrics = fast queries
 - Or build custom dashboard with React + Snowflake API
@@ -194,23 +204,30 @@ astro dev run dags backfill flowguard_daily_etl \
 ## 🐛 Troubleshooting
 
 ### Problem: Airflow shows "Import Error"
+
 **Solution:**
+
 ```bash
 cd airflow
 astro dev restart
 ```
 
 ### Problem: Spark job fails with Snowflake connection error
+
 **Solution:** Check `airflow/.env` has correct Snowflake credentials
 
 ### Problem: No data in SILVER/GOLD
-**Solution:** 
+
+**Solution:**
+
 1. Verify BRONZE has data: `SELECT COUNT(*) FROM BRONZE.ORDERS_RAW`
 2. Check Spark job logs for errors
 3. Verify date filter matches data: `WHERE DATE_PARTITION = '2026-02-16'`
 
 ### Problem: Slow Spark performance
+
 **Solution:**
+
 - Increase executor memory in DAG: `"spark.executor.memory": "4g"`
 - Add more partitions: `df.repartition(10)`
 - Check Snowflake warehouse size: `ALTER WAREHOUSE COMPUTE_WH SET WAREHOUSE_SIZE = MEDIUM`
@@ -228,19 +245,22 @@ astro dev restart
 ## ✅ Summary
 
 **Status:**
+
 - ✅ SILVER schema created
-- ✅ GOLD schema created  
+- ✅ GOLD schema created
 - ✅ 6 Spark jobs implemented
 - ✅ Airflow DAG configured
 - ✅ Ready to process data!
 
 **What You Can Do Now:**
+
 1. Run Spark jobs locally to test
 2. Start Airflow and trigger DAG manually
 3. Query SILVER/GOLD tables in Snowflake
 4. Let Airflow run daily automatically
 
 **Current Data:**
+
 - BRONZE: 249 orders, 242 clicks (real-time)
 - SILVER: Ready to process (run Spark jobs)
 - GOLD: Ready to aggregate (run Spark jobs)

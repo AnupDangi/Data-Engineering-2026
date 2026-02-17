@@ -10,7 +10,15 @@ echo "========================================="
 # 1. Start Docker Infrastructure
 echo "1️⃣  Starting Docker infrastructure..."
 docker-compose up -d
-sleep 5
+
+# Wait for services to be healthy using dedicated script
+./scripts/wait_for_services.sh
+
+if [ $? -ne 0 ]; then
+    echo "❌ Docker services failed to start properly"
+    echo "   Try running: docker-compose down && docker-compose up -d"
+    exit 1
+fi
 
 # 2. Start Food Catalog Service
 echo "2️⃣  Starting Food Catalog Service (port 8001)..."

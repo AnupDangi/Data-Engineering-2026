@@ -51,11 +51,13 @@ majorproject/
    - Tracks metadata (ingestion_id, source_topic, etc.)
 
 **Data Flow:**
+
 ```
 Web UI → Events Gateway → Kafka → Bronze Consumer → Snowflake BRONZE
 ```
 
 **Technologies:**
+
 - FastAPI (REST API)
 - Kafka (message queue)
 - PostgreSQL (operational DB)
@@ -81,18 +83,19 @@ Web UI → Events Gateway → Kafka → Bronze Consumer → Snowflake BRONZE
    - **Bronze → Silver (Cleaning):**
      - `bronze_to_silver_orders.py`: Deduplicate, validate, enrich orders
      - `bronze_to_silver_clicks.py`: Deduplicate, validate clicks
-   
    - **Silver → Gold (Aggregation):**
      - `silver_to_gold_gmv.py`: Daily revenue metrics
      - `silver_to_gold_item_performance.py`: Item-level analytics
      - `silver_to_gold_funnel.py`: Conversion funnel metrics
 
 **Data Flow:**
+
 ```
 BRONZE (raw) → SILVER (clean) → GOLD (metrics)
 ```
 
 **Technologies:**
+
 - Apache Airflow (orchestration)
 - PySpark (distributed processing)
 - Snowflake (data warehouse)
@@ -141,18 +144,21 @@ astro dev run dags backfill flowguard_daily_etl \
 ## 📂 Snowflake Layer Architecture
 
 ### BRONZE (Raw Events)
+
 - `ORDERS_RAW`: Raw order events from Kafka
 - `CLICKS_RAW`: Raw click/impression events
 - **Purpose:** Landing zone, immutable raw data
 - **Managed by:** Real-time ETL (Bronze Consumer)
 
 ### SILVER (Cleaned Data)
+
 - `ORDERS_CLEAN`: Deduplicated, validated, enriched orders
 - `CLICKS_CLEAN`: Deduplicated, validated clicks
 - **Purpose:** Clean, production-ready data
 - **Managed by:** Batch ETL (Spark jobs)
 
 ### GOLD (Business Metrics)
+
 - `DAILY_GMV_METRICS`: Daily revenue and order metrics
 - `FOOD_ITEM_PERFORMANCE`: Item-level performance analytics
 - `USER_FUNNEL_METRICS`: Conversion funnel analysis
@@ -166,10 +172,12 @@ astro dev run dags backfill flowguard_daily_etl \
 ## 🔧 Configuration
 
 ### Real-time ETL
+
 - **Config:** `majorproject/.env`
 - **Contains:** Kafka, PostgreSQL, Snowflake credentials
 
 ### Batch ETL
+
 - **Config:** `airflow/.env`
 - **Contains:** Snowflake, Spark, Airflow settings
 - **Note:** Must sync Snowflake credentials from parent `.env`
@@ -209,11 +217,13 @@ python bronze_to_silver_orders.py "2026-02-16"
 ## 🐛 Debugging
 
 ### Real-time ETL Issues
+
 - **Logs:** Check service logs in `/tmp/events_gateway.log`, `/tmp/bronze_consumer.log`
 - **Kafka:** Use `kafka-console-consumer` to inspect topics
 - **Snowflake:** Query `BRONZE` layer to verify ingestion
 
 ### Batch ETL Issues
+
 - **Logs:** Check Airflow UI → DAG Runs → Task Logs
 - **Spark:** Check executor logs for detailed errors
 - **Snowflake:** Verify `SILVER` and `GOLD` table counts
@@ -223,6 +233,7 @@ python bronze_to_silver_orders.py "2026-02-16"
 ## 📦 Dependencies
 
 ### Real-time ETL
+
 - Python 3.10+
 - FastAPI, uvicorn
 - confluent-kafka
@@ -230,6 +241,7 @@ python bronze_to_silver_orders.py "2026-02-16"
 - snowflake-connector-python
 
 ### Batch ETL
+
 - Astronomer Astro CLI
 - PySpark 3.4+
 - Airflow 2.x

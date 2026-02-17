@@ -3,8 +3,9 @@
 ## 📊 Current Status (As of Feb 16, 2026)
 
 ### ✅ COMPLETED (Stages 1-3)
+
 1. **Events Gateway + Kafka** - Fully working
-2. **Web UI + Food Catalog** - Fully working  
+2. **Web UI + Food Catalog** - Fully working
 3. **Bronze Layer (Kafka → Snowflake)** - Fully working with:
    - ✅ Idempotency (MERGE-based)
    - ✅ Metadata tracking
@@ -20,19 +21,23 @@ You have **3 main options** for what to build next:
 ---
 
 ### Option 1: Flink Real-Time Attribution (HIGH VALUE) 🔥
+
 **What it does:** Match clicks to orders in real-time to calculate conversion rates
 
-**Why important:** 
+**Why important:**
+
 - Answers: "Which food items get the most clicks but don't convert?"
 - Answers: "What's our click-to-order conversion rate per category?"
 - Real-time business insights
 
 **What to build:**
+
 ```
 Clicks + Orders → Flink Job → Match in 30-min window → attributed.events.v1 topic
 ```
 
 **Core logic:**
+
 ```java
 // Flink pseudo-code
 clicks.join(orders)
@@ -43,6 +48,7 @@ clicks.join(orders)
 ```
 
 **Deliverables:**
+
 1. Flink Docker container setup
 2. Attribution job (click-order matching)
 3. New Kafka topic: `attributed.events.v1`
@@ -56,23 +62,28 @@ clicks.join(orders)
 ---
 
 ### Option 2: Spark ETL + Airflow Batch Jobs (SOLID FOUNDATION) 📊
+
 **What it does:** Daily/hourly aggregations for business metrics
 
 **Why important:**
+
 - Calculate daily GMV (Gross Merchandise Value)
 - Food item performance rankings
 - User cohort analysis
 - Scheduled reports
 
 **What to build:**
+
 ```
 Bronze → Spark Jobs → SILVER/GOLD layers → Business dashboards
 ```
 
 **Example jobs:**
+
 1. **Daily Order Aggregation**
+
    ```sql
-   SELECT 
+   SELECT
      DATE(event_timestamp) as date,
      COUNT(*) as orders,
      SUM(price) as gmv,
@@ -83,8 +94,9 @@ Bronze → Spark Jobs → SILVER/GOLD layers → Business dashboards
    ```
 
 2. **Food Performance**
+
    ```sql
-   SELECT 
+   SELECT
      item_name,
      COUNT(*) as total_orders,
      SUM(price) as revenue,
@@ -97,7 +109,7 @@ Bronze → Spark Jobs → SILVER/GOLD layers → Business dashboards
 
 3. **Click Funnel Analysis**
    ```sql
-   SELECT 
+   SELECT
      item_id,
      COUNT(CASE WHEN event_type='impression' THEN 1 END) as impressions,
      COUNT(CASE WHEN event_type='click' THEN 1 END) as clicks,
@@ -108,6 +120,7 @@ Bronze → Spark Jobs → SILVER/GOLD layers → Business dashboards
    ```
 
 **Deliverables:**
+
 1. Airflow Docker setup + DAGs
 2. 3-5 Spark transformation jobs
 3. SILVER layer (cleaned data)
@@ -121,19 +134,23 @@ Bronze → Spark Jobs → SILVER/GOLD layers → Business dashboards
 ---
 
 ### Option 3: Simple Analytics Dashboard (QUICK WIN) 📈
+
 **What it does:** Visualize existing Bronze data immediately
 
 **Why important:**
+
 - See your data NOW (no waiting for complex processing)
 - Validate data quality
 - Show stakeholders what you have
 
 **What to build:**
+
 ```
 Snowflake BRONZE → Streamlit/Metabase/Superset → Dashboard
 ```
 
 **Dashboard features:**
+
 1. **Real-time Metrics**
    - Orders per hour/day
    - Revenue trends
@@ -150,6 +167,7 @@ Snowflake BRONZE → Streamlit/Metabase/Superset → Dashboard
    - Error rates
 
 **Tools options:**
+
 - **Streamlit** (Python, fastest) - 4 hours
 - **Metabase** (Open source) - 6 hours
 - **Superset** (Apache) - 8 hours
@@ -164,12 +182,14 @@ Snowflake BRONZE → Streamlit/Metabase/Superset → Dashboard
 ## 🤔 My Recommendation: **Option 2 (Spark + Airflow)**
 
 **Rationale:**
+
 1. **Foundation first** - SILVER/GOLD layers needed for any analytics
 2. **Known technology** - SQL + Spark = easier than Flink
 3. **Immediate value** - Daily metrics answer business questions
 4. **Flexible** - Easy to add more jobs later
 
 **After Option 2, you can:**
+
 - Add Flink for real-time (Option 1)
 - Build dashboards on top of GOLD layer (Option 3)
 - Add ML models for predictions
@@ -179,6 +199,7 @@ Snowflake BRONZE → Streamlit/Metabase/Superset → Dashboard
 ## 📋 If You Choose Option 2 (Spark + Airflow)
 
 ### Step 1: Setup Infrastructure (1 hour)
+
 ```bash
 # Add to docker-compose.yml
 - Apache Airflow (web UI on port 8080)
@@ -186,12 +207,13 @@ Snowflake BRONZE → Streamlit/Metabase/Superset → Dashboard
 ```
 
 ### Step 2: Create SILVER Schema (30 min)
+
 ```sql
 -- Snowflake
 CREATE SCHEMA SILVER;
 
 CREATE TABLE SILVER.orders_cleaned AS
-SELECT 
+SELECT
   order_id,
   user_id,
   item_id,
@@ -204,6 +226,7 @@ WHERE price > 0 AND item_id IS NOT NULL;
 ```
 
 ### Step 3: Create GOLD Schema (30 min)
+
 ```sql
 CREATE SCHEMA GOLD;
 
@@ -217,6 +240,7 @@ CREATE TABLE GOLD.daily_order_metrics (
 ```
 
 ### Step 4: Write Airflow DAG (2 hours)
+
 ```python
 # dags/daily_etl.py
 from airflow import DAG
@@ -242,6 +266,7 @@ clean_orders >> daily_metrics
 ```
 
 ### Step 5: Test & Monitor (1 hour)
+
 ```bash
 # Trigger manually
 airflow dags trigger daily_etl
@@ -254,38 +279,35 @@ SELECT * FROM GOLD.daily_order_metrics ORDER BY date DESC;
 
 ## 🚀 Quick Decision Matrix
 
-| Criteria | Flink (Option 1) | Spark+Airflow (Option 2) | Dashboard (Option 3) |
-|----------|-----------------|-------------------------|---------------------|
-| Time to complete | 2-3 days | 2-3 days | 4 hours - 1 day |
-| Learning curve | High | Low-Medium | Low |
-| Business value | High | High | Medium |
-| Technical debt | Low | Low | High (if skipping ETL) |
-| Flexibility | Medium | High | Low |
-| **Recommendation** | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐ |
+| Criteria           | Flink (Option 1) | Spark+Airflow (Option 2) | Dashboard (Option 3)   |
+| ------------------ | ---------------- | ------------------------ | ---------------------- |
+| Time to complete   | 2-3 days         | 2-3 days                 | 4 hours - 1 day        |
+| Learning curve     | High             | Low-Medium               | Low                    |
+| Business value     | High             | High                     | Medium                 |
+| Technical debt     | Low              | Low                      | High (if skipping ETL) |
+| Flexibility        | Medium           | High                     | Low                    |
+| **Recommendation** | ⭐⭐⭐           | ⭐⭐⭐⭐⭐               | ⭐⭐                   |
 
 ---
 
 ## 💡 Alternative: Hybrid Approach (BEST FOR LEARNING)
 
 **Phase A: Quick wins (1 day)**
+
 1. Create simple GOLD tables in Snowflake (just SQL, no Airflow yet)
 2. Build basic Streamlit dashboard
 3. Show metrics to "stakeholders"
 
-**Phase B: Production setup (2 days)**
-4. Add Airflow for scheduling
-5. Add Spark for complex transformations
-6. Migrate manual queries to DAGs
+**Phase B: Production setup (2 days)** 4. Add Airflow for scheduling 5. Add Spark for complex transformations 6. Migrate manual queries to DAGs
 
-**Phase C: Real-time (later)**
-7. Add Flink for attribution
-8. Add Redis for billing
+**Phase C: Real-time (later)** 7. Add Flink for attribution 8. Add Redis for billing
 
 ---
 
 ## 📝 What Do You Want?
 
 Tell me:
+
 1. **What questions** do you want to answer with your data?
    - "Which food items are most popular?"
    - "What's my revenue trend?"
@@ -301,6 +323,7 @@ Tell me:
    - Quick demo/portfolio piece (Dashboard)?
 
 **My suggestion:** Start with **Option 2 (Spark + Airflow)** - it gives you:
+
 - Immediate value (daily metrics)
 - Clean foundation (SILVER/GOLD layers)
 - Easy to extend later (add Flink, ML, etc.)

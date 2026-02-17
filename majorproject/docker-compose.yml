@@ -47,6 +47,7 @@ services:
     image: confluentinc/cp-kafka:7.5.0
     container_name: flowguard-kafka-1
     hostname: kafka-broker-1
+    restart: on-failure:3
     depends_on:
       zookeeper:
         condition: service_healthy
@@ -96,6 +97,7 @@ services:
     image: confluentinc/cp-kafka:7.5.0
     container_name: flowguard-kafka-2
     hostname: kafka-broker-2
+    restart: on-failure:3
     depends_on:
       zookeeper:
         condition: service_healthy
@@ -145,6 +147,7 @@ services:
     image: confluentinc/cp-kafka:7.5.0
     container_name: flowguard-kafka-3
     hostname: kafka-broker-3
+    restart: on-failure:3
     depends_on:
       zookeeper:
         condition: service_healthy
